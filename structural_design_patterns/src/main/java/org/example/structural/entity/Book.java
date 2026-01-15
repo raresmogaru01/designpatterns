@@ -15,13 +15,16 @@ import lombok.NoArgsConstructor;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String title;
-    String author;
-    double price;
+    private String title;
+    private String author;
+    private double price;
+
+    private String category;
 
     // TODO: Implement description method
+    // This acts as the base component for our Decorator pattern later
     public String getDescription() {
         return title + " by " + author;
     }
