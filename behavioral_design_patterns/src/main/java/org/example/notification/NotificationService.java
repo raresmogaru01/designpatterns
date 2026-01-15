@@ -1,4 +1,3 @@
-
 package org.example.notification;
 
 import lombok.RequiredArgsConstructor;
@@ -9,6 +8,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
+
     private final List<Observer> observers;
 
     public void notifyObservers(String message) {

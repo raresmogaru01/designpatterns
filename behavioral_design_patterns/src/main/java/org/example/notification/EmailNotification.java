@@ -9,6 +9,6 @@ public class EmailNotification implements Observer {
 
     @Override
     public void update(String message) {
-        log.info(" Email sent: {}", message);
+        log.info("EMAIL sent: {}", message);
     }
 }

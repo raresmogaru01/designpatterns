@@ -1,10 +1,9 @@
-
 package org.example.command;
 
 import lombok.RequiredArgsConstructor;
 import org.example.Order;
-import org.example.repository.OrderRepository;
 import org.example.notification.NotificationService;
+import org.example.repository.OrderRepository;
 
 @RequiredArgsConstructor
 public class PlaceOrderCommand implements OrderCommand {
@@ -17,6 +16,6 @@ public class PlaceOrderCommand implements OrderCommand {
     public void execute() {
         order.updateStatus("PLACED");
         repository.save(order);
-        notificationService.notifyObservers("The order has been placed: " + order.getId());
+        notificationService.notifyObservers("Order placed: " + order.getId());
     }
 }

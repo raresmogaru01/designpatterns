@@ -9,7 +9,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/behavioral_design_patterns/pom.xml" />
+        <option value="$PROJECT_DIR$/creational_design_patterns/pom.xml" />
         <option value="$PROJECT_DIR$/structural_design_patterns/pom.xml" />
       </set>
     </option>

@@ -9,6 +9,6 @@ public class SMSNotification implements Observer {
 
     @Override
     public void update(String message) {
-        log.info(" SMS sent: {}", message);
+        log.info("SMS sent: {}", message);
     }
 }

@@ -9,5 +9,6 @@ public class CreditCardPayment implements PaymentStrategy {
 
     @Override
     public void pay(double amount) {
-        log.info("Paid ${} using credit card ", amount);
+        log.info("Paid ${} using Credit Card", amount);
     }
+}
