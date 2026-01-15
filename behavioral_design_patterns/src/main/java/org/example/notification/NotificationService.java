@@ -1,19 +1,17 @@
 
 package org.example.notification;
 
-import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class NotificationService {
-    private List<Observer> observers = new ArrayList<>();
-
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
+    private final List<Observer> observers;
 
     public void notifyObservers(String message) {
-        for (Observer observer : observers) {
-            observer.update(message);
-        }
+        observers.forEach(o -> o.update(message));
     }
 }

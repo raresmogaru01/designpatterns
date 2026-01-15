@@ -1,10 +1,13 @@
-
 package org.example.payment;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Component("creditCardPayment")
+@Slf4j
 public class CreditCardPayment implements PaymentStrategy {
+
     @Override
     public void pay(double amount) {
-        // TODO: Implement credit card payment logic
-        System.out.println("Paid $" + amount + " with Credit Card.");
+        log.info("Paid ${} using credit card ", amount);
     }
-}

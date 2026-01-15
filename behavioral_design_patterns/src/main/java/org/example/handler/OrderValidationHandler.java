@@ -10,6 +10,8 @@ public abstract class OrderValidationHandler {
         this.next = next;
     }
 
+    public abstract void validate(Order order);
+
     public void validate(Order order) {
         if (next != null) {
             next.validate(order);
