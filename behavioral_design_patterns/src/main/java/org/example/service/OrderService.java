@@ -1,37 +1,44 @@
 package org.example.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.Order;
-import org.example.command.PlaceOrderCommand;
-import org.example.handler.OrderValidationHandler;
+import org.example.handler.Handler;
 import org.example.notification.NotificationService;
 import org.example.payment.PaymentStrategy;
 import org.example.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderValidationHandler orderValidationChain;
-    private final OrderRepository repository;
+    private final OrderRepository orderRepository;
     private final NotificationService notificationService;
-    private final PaymentStrategy paymentStrategy;
+    private final Handler validationChain;
 
-    public Order placeOrder(Order order) {
-        orderValidationChain.validate(order);
+    @Autowired
+    public OrderService(OrderRepository orderRepository,
+                        NotificationService notificationService,
+                        @Qualifier("validationChain") Handler validationChain) {
+        this.orderRepository = orderRepository;
+        this.notificationService = notificationService;
+        this.validationChain = validationChain;
+    }
+
+    public void processOrder(Order order, PaymentStrategy paymentStrategy) {
+        log.info("--- Processing Order for {} ---", order.getCustomerName());
+
+        if (!validationChain.handle(order)) {
+            log.error("Order processing aborted due to validation failure.");
+            return;
+        }
+
         paymentStrategy.pay(order.getTotalAmount());
+        order.setStatus("PAID");
+        orderRepository.save(order);
 
-        new PlaceOrderCommand(order, repository, notificationService).execute();
-        return order;
-    }
-
-    public Order getById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
-    }
-
-    public Iterable<Order> getAll() {
-        return repository.findAll();
+        notificationService.notifyObservers("Order " + order.getId() + " processed successfully!");
     }
 }

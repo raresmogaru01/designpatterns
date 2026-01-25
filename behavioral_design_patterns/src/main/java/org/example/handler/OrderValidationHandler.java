@@ -1,21 +1,19 @@
-
 package org.example.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.Order;
+import org.springframework.stereotype.Component;
 
-public abstract class OrderValidationHandler {
-
-    protected OrderValidationHandler next;
-
-    public void setNext(OrderValidationHandler next) {
-        this.next = next;
-    }
-
-    public abstract void validate(Order order);
-
-    protected void validateNext(Order order) {
-        if (next != null) {
-            next.validate(order);
+@Slf4j
+@Component
+public class OrderValidationHandler extends Handler {
+    @Override
+    public boolean handle(Order order) {
+        if (order.getCustomerName() == null || order.getCustomerName().isEmpty()) {
+            log.error("Validation Failed: Missing customer name");
+            return false;
         }
+        log.info("Step 1: Basic Order Validation Passed");
+        return super.handle(order);
     }
 }

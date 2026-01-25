@@ -1,20 +1,22 @@
 package org.example.config;
 
-import org.example.handler.InventoryCheckHandler;
-import org.example.handler.OrderValidationHandler;
-import org.example.handler.PaymentValidationHandler;
+import org.example.handler.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ValidationChainConfig {
 
-    @Bean
-    public OrderValidationHandler orderValidationChain() {
-        InventoryCheckHandler inventory = new InventoryCheckHandler();
-        PaymentValidationHandler payment = new PaymentValidationHandler();
+    @Bean("validationChain")
+    public Handler validationChain(
+            OrderValidationHandler orderValidation,
+            InventoryCheckHandler inventoryCheck,
+            PaymentValidationHandler paymentValidation) {
 
-        inventory.setNext(payment);
-        return inventory;
+        //chain: OrderValidation -> InventoryCheck ->PaymentValidation
+        orderValidation.setNext(inventoryCheck);
+        inventoryCheck.setNext(paymentValidation);
+
+        return orderValidation;
     }
 }

@@ -1,21 +1,22 @@
 package org.example.command;
 
-import lombok.RequiredArgsConstructor;
 import org.example.Order;
-import org.example.notification.NotificationService;
-import org.example.repository.OrderRepository;
+import org.example.payment.PaymentStrategy;
+import org.example.service.OrderService;
 
-@RequiredArgsConstructor
 public class PlaceOrderCommand implements OrderCommand {
-
+    private final OrderService orderService;
     private final Order order;
-    private final OrderRepository repository;
-    private final NotificationService notificationService;
+    private final PaymentStrategy paymentStrategy;
+
+    public PlaceOrderCommand(OrderService orderService, Order order, PaymentStrategy paymentStrategy) {
+        this.orderService = orderService;
+        this.order = order;
+        this.paymentStrategy = paymentStrategy;
+    }
 
     @Override
     public void execute() {
-        order.updateStatus("PLACED");
-        repository.save(order);
-        notificationService.notifyObservers("Order placed: " + order.getId());
+        orderService.processOrder(order, paymentStrategy);
     }
 }

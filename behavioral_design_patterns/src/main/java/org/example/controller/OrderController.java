@@ -1,29 +1,33 @@
 package org.example.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.example.Order;
+import org.example.command.PlaceOrderCommand;
+import org.example.payment.CreditCardPayment;
 import org.example.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/orders")
-@RequiredArgsConstructor
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
-    public Order placeOrder(@RequestBody Order order) {
-        return orderService.placeOrder(order);
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/{id}")
-    public Order getOrderById(@PathVariable Long id) {
-        return orderService.getById(id);
-    }
+    @PostMapping("/place")
+    public String placeOrder(@RequestBody Order order) {
 
-    @GetMapping
-    public Iterable<Order> getAllOrders() {
-        return orderService.getAll();
+        PlaceOrderCommand command = new PlaceOrderCommand(
+                orderService,
+                order,
+                new CreditCardPayment("1234-5678-9012-3456")
+        );
+
+        command.execute();
+        return "Order processing initiated!";
     }
 }

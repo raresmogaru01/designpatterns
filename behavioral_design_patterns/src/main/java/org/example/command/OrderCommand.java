@@ -1,4 +1,3 @@
-
 package org.example.command;
 
 public interface OrderCommand {

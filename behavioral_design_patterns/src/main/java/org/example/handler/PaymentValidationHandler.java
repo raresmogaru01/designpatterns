@@ -2,18 +2,18 @@ package org.example.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.Order;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-public class PaymentValidationHandler extends OrderValidationHandler {
-
+@Component
+public class PaymentValidationHandler extends Handler {
     @Override
-    public void validate(Order order) {
-        //TODO
-        if (order.getCustomerName() == null || order.getCustomerName().isBlank()) {
-            throw new IllegalStateException("Payment validation failed");
+    public boolean handle(Order order) {
+        if (order.getTotalAmount() <= 0) {
+            log.error("Validation Failed: Invalid total amount");
+            return false;
         }
-
-        log.info("Payment validation passed for order {}", order.getId());
-        validateNext(order);
+        log.info("Step 3: Payment Validation Passed");
+        return super.handle(order);
     }
 }
